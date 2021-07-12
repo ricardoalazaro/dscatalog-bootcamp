@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -29,7 +30,10 @@ public class ProductResource {
 	private ProductService service;
 
 	@GetMapping
-	public ResponseEntity <Page<ProductDTO>> findAll(Pageable pageable) { //substitui o código abaixo. Parametros: page, size, sort por padrão
+	public ResponseEntity <Page<ProductDTO>> findAll(
+			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
+			@RequestParam(value = "name", defaultValue = "") String name,
+			Pageable pageable) { //substitui o código abaixo. Parametros: page, size, sort por padrão
 			/*@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
@@ -38,7 +42,8 @@ public class ProductResource {
 		
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		*/
-		Page<ProductDTO> list = service.findAllPaged(/*pageRequest*/ pageable);
+				
+		Page<ProductDTO> list = service.findAllPaged(/*pageRequest*/categoryId, name.trim(), pageable);
 		
 		return ResponseEntity.ok().body(list);
 	}
